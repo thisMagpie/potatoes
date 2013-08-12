@@ -161,7 +161,7 @@ function onCaret(caller, event) {
                                             '\nGjs-Message: JS LOG: END ');
                 }
             }
-            catch (err) {
+            catch (err.message) {
                 log(err.message);
             }
         }
