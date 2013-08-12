@@ -26,7 +26,7 @@ const Lang = imports.lang;
 const Signals = imports.signals;
 
 const FocusCaretTracker = new Lang.Class({
-   Name: 'FocusCaretTracker',
+    Name: 'FocusCaretTracker',
 
     _init: function() {
         Atspi.init();
@@ -38,54 +38,51 @@ const FocusCaretTracker = new Lang.Class({
         this._registerSelect = false;
     },
 
-   _registerFocusEvents: function() {
+    _registerFocusEvents: function() {
 
-       if (this._trackingFocus) {
-           return true;
-       }
+        if (this._trackingFocus) 
+            return true;
 
-       this._registerFocus = this._atspiListener.register(
-                                'object:state-changed:focused');
-       this._registerSelect = this._atspiListener.register(
-                                'object:state-changed:selected');
+        this._registerFocus = this._atspiListener.register(
+                                                'object:state-changed:focused');
+        this._registerSelect = this._atspiListener.register(
+                                               'object:state-changed:selected');
 
-       return this._trackingFocus = this._registerFocus || this._registerSelect;
-   },
+        return this._trackingFocus = this._registerFocus || this._registerSelect;
+    },
 
-   _deregisterFocusEvents: function() {
+    _deregisterFocusEvents: function() {
 
         if (!this._trackingFocus)
             return true;
 
         this._registerFocus = this._atspiListener.register(
-                                'object:state-changed:focused');
+                                                'object:state-changed:focused');
         this._registerSelect = this._atspiListener.register(
-                                'object:state-changed:selected');
+                                               'object:state-changed:selected');
 
-       return this._trackingFocus = !(
-                                this._registerFocus &&
-                                this._registerSelect);
-   },
+    return this._trackingFocus = !(this._registerFocus && this._registerSelect);
+    },
 
-   _registerCaretEvents: function() {
+    _registerCaretEvents: function() {
 
-       if (this._trackingCaret)
-           return true;
+        if (this._trackingCaret)
+            return true;
 
-       this._trackingCaret = this._atspiListener.register(
-                                'object:text-caret-moved');
-       return this._trackingCaret;
-   },
+        this._trackingCaret = this._atspiListener.register(
+                                                     'object:text-caret-moved');
+        return this._trackingCaret;
+    },
 
-   _deregisterCaretEvents: function() {
+    _deregisterCaretEvents: function() {
 
-       if (!this._trackingCaret)
-           return true;
+    if (!this._trackingCaret)
+        return true;
 
-       this._trackingCaret = !this._atspiListener.deregister(
-                                'object:text-caret-moved');
-       return this._trackingCaret;
-   },
+    this._trackingCaret = !this._atspiListener.deregister(
+                                                     'object:text-caret-moved');
+    return this._trackingCaret;
+    },
 
     registeredCaretEvents: function() {
        return this._trackingCaret;
@@ -105,14 +102,15 @@ Signals.addSignalMethods(FocusCaretTracker.prototype);
 //TODO Move to magnifier
 function onFocus(caller, event) {
     let acc = event.source;
+    if(!acc)
+        return;
 
-    if (acc && event.type.indexOf('object:state-changed') ==
-                                    0 && event.detail1 == 1) {
+    if (event.type.indexOf('object:state-changed') == 0 && event.detail1 == 1) {
         let name = acc.get_name();
         let roleName = acc.get_role_name();
         let comp = acc.get_component_iface();
 
-        if (acc == 'Terminal' || roleName == 'terminal')
+        if(!comp || acc == 'Terminal' || roleName == 'terminal')
             return;
 
         log('<accessible> : ' + name);
@@ -120,20 +118,12 @@ function onFocus(caller, event) {
         log('<event> ' + event.type + ',' + event.detail1);
         log('<contructor>' + acc.constructor);
         log('<role name> ' + roleName);
+        let extents = comp.get_extents(Atspi.CoordType.SCREEN);
 
-        if (comp) {
-            let extents = comp.get_extents(Atspi.CoordType.SCREEN);
-
-            if (extents)
-                log('<extents> [' + extents.x + ' ' +
-                                extents.y +
-                                ' ' + extents.width +
-                                ' ' + extents.height +
-                                ']\nGjs-Message: JS LOG: END ');
-        }
-        else {
-            log('focus lost \nGjs-Message: JS LOG: END ');
-        }
+        if (extents)
+            log('<extents> [' + extents.x + ' ' + extents.y + ' ' + 
+                                          extents.width + ' ' + extents.height +
+                                                ']\nGjs-Message: JS LOG: END ');
     }
     else {
         log('no accessible \nGjs-Message: JS LOG: END ');
