@@ -1,0 +1,18 @@
+#-*- mode: python -*-
+# JHBUILDRC_GNOME_SHELL
+
+build_policy = 'updated'
+moduleset = 'gnome-apps-3.10'
+modules = [ 'meta-gnome-core' ]
+checkoutroot = os.path.expanduser('~/gnome/source')
+prefix = os.path.expanduser('~/gnome/install')
+
+addpath('BASH', '/bin/bash')
+addpath('SH', '/bin/sh')
+addpath('ZSH', '/bin/zsh')
+
+skip='WebKit'
+autogenargs=' --disable-static --disable-docs'
+ignore_suggests = True
+module_autogenargs['gnome-shell']=' --enable-jhbuild-wrapper-script --enable-introspection'
+module_autogenargs['NetworkManager']=' --disable-gtk-doc'
