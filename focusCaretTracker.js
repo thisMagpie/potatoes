@@ -110,7 +110,7 @@ function focusPosition(caller, event) {
 function caretPosition(caller, event) {
     let acc = event.source;
 
-    if (acc && event.type.indexOf('object:text-caret-moved') == 0) {
+    if (event.type.indexOf('object:text-caret-moved') == 0) {
         let roleName = acc.get_role_name();
         let text = acc.get_text_iface();
 
