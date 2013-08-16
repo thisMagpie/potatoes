@@ -96,7 +96,7 @@ const FocusCaretTracker = new Lang.Class({
 });
 Signals.addSignalMethods(FocusCaretTracker.prototype);
 
-function focusedWidget(caller, event) {
+function focusPosition(caller, event) {
     let acc = event.source;
 
     if (event.type.indexOf('object:state-changed') == 0 && event.detail1 == 1) {
@@ -107,14 +107,14 @@ function focusedWidget(caller, event) {
     }
 }
 
-function caretAtOffset(caller, event) {
+function caretPosition(caller, event) {
     let acc = event.source;
 
     if (acc && event.type.indexOf('object:text-caret-moved') == 0) {
         let roleName = acc.get_role_name();
         let text = acc.get_text_iface();
 
-        if (!text || text.get_caret_offset() != 0)
+        if (text.get_caret_offset() != 0)
             return;
 
         let offset = text.get_caret_offset();
